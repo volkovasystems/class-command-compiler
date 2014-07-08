@@ -18,7 +18,7 @@
 
     @include:
         {
-            "arguments-to-array": "argumentsToArray"
+            "arguments-to-array.js": "argumentsToArray"
         }
     @end-include
 */
@@ -34,8 +34,13 @@ var CommandCompiler = function CommandCompiler( compiler ){
     this.setCompiler( compiler );
 };
 
+/*:
+    @method-documentation:
+        This will just call the compile method of the chosen compiler.
+    @end-method-documentation
+*/
 CommandCompiler.prototype.compile = function compile( ){
-    this.compiler.compile.apply( this, argumentsToArray( arguments ) );
+    this.liveCompiler.compile.apply( this, argumentsToArray( arguments ) );
 };
 
 CommandCompiler.prototype.setCompiler = function setCompiler( compiler ){
@@ -47,7 +52,7 @@ CommandCompiler.prototype.setCompiler = function setCompiler( compiler ){
         @end-meta-configuration
     */
 
-    this.compiler = new compiler( );
+    this.liveCompiler = new compiler( );
 };
 
 CommandCompiler.prototype.setCompilerWithNamespace = function setCompilerWithNamespace( namespace ){
@@ -64,7 +69,7 @@ CommandCompiler.prototype.setCompilerWithNamespace = function setCompilerWithNam
     if( "compilerSet" in this &&
         namespace in this.compilerSet &&
         "compiler" in this &&
-        this.compiler.constructor !== compiler )
+        this.liveCompiler.constructor !== compiler )
     {
         this.setCompiler( compiler );
     }
@@ -85,7 +90,7 @@ CommandCompiler.prototype.setCompilerNamespace = function setCompilerNamespace( 
     }
 
     if( !( namespace in this.compilerSet ) ||
-        this.compilerSet[ namespace ] !== compiler.constructor )
+        this.compilerSet[ namespace ] !== compiler )
     {
         this.compilerSet[ namespace ] = compiler;
     }
